@@ -10,6 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
+		"@stefanprobst/rehype-shiki": "^2.2.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-cloudflare-workers": "^1.0.6",
 		"@sveltejs/kit": "^1.5.0",
@@ -18,11 +19,18 @@
 		"autoprefixer": "^10.4.13",
 		"langchain": "^0.0.56",
 		"postcss": "^8.4.21",
+		"rehype-external-links": "^2.0.1",
+		"rehype-stringify": "^9.0.3",
+		"remark-gfm": "^3.0.1",
+		"remark-parse": "^10.0.1",
+		"remark-rehype": "^10.1.0",
+		"shiki-es": "^0.2.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"tailwindcss": "^3.2.6",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
+		"unified": "^10.1.2",
 		"vite": "^4.0.0"
 	},
 	"type": "module"

@@ -5,7 +5,7 @@ import { CallbackManager } from "langchain/callbacks";
 import { ChatPromptTemplate, HumanMessagePromptTemplate, PromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
 import { LLMChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { HumanChatMessage, AIChatMessage } from "langchain/schema";
+import { HumanChatMessage, AIChatMessage, SystemChatMessage } from "langchain/schema";
 
 import { error } from '@sveltejs/kit';
 
@@ -28,10 +28,13 @@ export const POST = async ({ request }) => {
                 }),
             });
 
-            await chat.call(body.chats.map(chat => chat.role == "user"
-                ? new HumanChatMessage(chat.content)
-                : new AIChatMessage(chat.content)
-            ));
+            await chat.call([
+                new SystemChatMessage("You are a helpful assistant. Limit prose. Answer with markdown where appropiate."),
+                ...body.chats.map(chat => chat.role == "user"
+                    ? new HumanChatMessage(chat.content)
+                    : new AIChatMessage(chat.content)
+                )
+            ]);
 
             controller.close();
         },

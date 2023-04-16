@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { readablestreamStore } from "../lib/readablestreamstore";
+    import { readablestreamStore } from "$lib/readablestreamstore";
+    import { markdownParser } from "$lib/markdownparser";
     import { fly } from "svelte/transition";
 
-    import Typingindicator from "../lib/typingindicator.svelte";
+    import Typingindicator from "$lib/typingindicator.svelte";
 
     const response = readablestreamStore();
 
@@ -48,7 +49,7 @@
             {#await new Promise((res) => setTimeout(res, 400)) then _}
                 <div class="flex">
                     <div in:fly={{ y: 50, duration: 400 }} class="assistant-chat">
-                        <p>Hello! How can I help you today?</p>
+                        Hello! How can I help you today?
                     </div>
                 </div>
             {/await}
@@ -57,13 +58,21 @@
                 {#if chat.role == "user"}
                     <div class="flex justify-end">
                         <div in:fly={{ y: 50, duration: 600 }} class="user-chat">
-                            <p>{chat.content}</p>
+                            {#await markdownParser(chat.content)}
+                                {chat.content}
+                            {:then html}
+                                {@html html}
+                            {/await}
                         </div>
                     </div>
                 {:else}
                     <div class="flex">
                         <div in:fly={{ y: 50, duration: 600 }} class="assistant-chat">
-                            <p>{chat.content}</p>
+                            {#await markdownParser(chat.content)}
+                                {chat.content}
+                            {:then html}
+                                {@html html}
+                            {/await}
                         </div>
                     </div>
                 {/if}
@@ -76,7 +85,11 @@
                             {#if $response.text == ""}
                                 <Typingindicator />
                             {:else}
-                                <p>{$response.text}</p>
+                                {#await markdownParser($response.text)}
+                                    {$response.text}
+                                {:then html}
+                                    {@html html}
+                                {/await}
                             {/if}
                         </div>
                         {#if $response.text != ""}
@@ -108,11 +121,11 @@
     }
 
     .assistant-chat {
-        @apply bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs;
+        @apply bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs my-0 prose prose-sm prose-pre:font-mono prose-pre:border prose-pre:bg-white prose-code:border-gray-300;
     }
 
     .user-chat {
-        @apply bg-[#FF3E00] text-white rounded-lg px-4 py-2 max-w-xs;
+        @apply bg-[#FF3E00] text-white rounded-lg px-4 py-2 max-w-xs my-0 prose prose-sm prose-pre:font-mono prose-pre:border prose-pre:bg-white prose-code:border-gray-300;
     }
 
     .chat-message {
