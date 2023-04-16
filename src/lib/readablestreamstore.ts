@@ -12,22 +12,22 @@ export function readablestreamStore() {
             if (!result.ok) throw new Error(result.statusText);
             if (!result.body) return;
 
+            const reader = result.body.pipeThrough(new TextDecoderStream()).getReader();
 
+            let finaltext = "";
+            while (true) {
+                const { value: token, done } = await reader.read();
 
+                if (token != undefined) update((val) => {
+                   finaltext = val.text + token;
+                   return ({ loading: true, text: finaltext });
+                });
+                if (done) break;
+            }
 
+            set({ loading: false, text: "" });
 
-
-
-
-
-
-
-
-
-
-
-
-          
+            return finaltext;
         } catch (err: any) {
             set({ loading: false, text: err.toString() });
             throw err;
