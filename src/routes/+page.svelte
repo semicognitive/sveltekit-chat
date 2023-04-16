@@ -43,12 +43,11 @@
         <p>Example made for <i><b>Intelligent Svelte</b></i>.</p>
     </div>
 
-    <form on:submit|preventDefault={handleSubmit} method="POST" action="/api/chat" class="flex flex-col space-y-4 md:min-w-[28rem] lg:min-w-[32rem] xl:min-w-[36rem] max-w-6xl">
-        <!-- Chat messages -->
+    <form class="chat-wrapper" on:submit|preventDefault={handleSubmit} method="POST" action="/api/chat">
         <div class="flex flex-col space-y-2 overflow-y-auto w-full aspect-square text-sm">
             {#await new Promise((res) => setTimeout(res, 400)) then _}
                 <div class="flex">
-                    <div in:fly={{ y: 50, duration: 400 }} class="bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs">
+                    <div in:fly={{ y: 50, duration: 400 }} class="assistant-chat">
                         <p>Hello! How can I help you today?</p>
                     </div>
                 </div>
@@ -57,13 +56,13 @@
             {#each chat_history as chat}
                 {#if chat.role == "user"}
                     <div class="flex justify-end">
-                        <div in:fly={{ y: 50, duration: 600 }} class="bg-[#FF3E00] text-white rounded-lg px-4 py-2 max-w-xs">
+                        <div in:fly={{ y: 50, duration: 600 }} class="user-chat">
                             <p>{chat.content}</p>
                         </div>
                     </div>
                 {:else}
                     <div class="flex">
-                        <div in:fly={{ y: 50, duration: 600 }} class="bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs">
+                        <div in:fly={{ y: 50, duration: 600 }} class="assistant-chat">
                             <p>{chat.content}</p>
                         </div>
                     </div>
@@ -73,7 +72,7 @@
             {#if $response.loading}
                 {#await new Promise((res) => setTimeout(res, 400)) then _}
                     <div class="flex">
-                        <div in:fly={{ y: 50, duration: 600 }} class="bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs">
+                        <div in:fly={{ y: 50, duration: 600 }} class="assistant-chat">
                             {#if $response.text == ""}
                                 <Typingindicator />
                             {:else}
@@ -97,16 +96,30 @@
         <div class="h-px bg-gray-200" />
 
         <span class="flex flex-row space-x-4">
-            <input
-                type="text"
-                placeholder="Type your message..."
-                name="message"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6" />
-            <button
-                type="submit"
-                class="inline-flex items-center rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-                Send
-            </button>
+            <input type="text" placeholder="Type your message..." name="message" class="chat-message" />
+            <button type="submit" class="chat-send"> Send </button>
         </span>
     </form>
 </main>
+
+<style lang="postcss">
+    .chat-wrapper {
+        @apply flex flex-col space-y-4 md:min-w-[28rem] lg:min-w-[32rem] xl:min-w-[36rem] max-w-6xl;
+    }
+
+    .assistant-chat {
+        @apply bg-gray-200 text-gray-800 rounded-lg px-4 py-2 max-w-xs;
+    }
+
+    .user-chat {
+        @apply bg-[#FF3E00] text-white rounded-lg px-4 py-2 max-w-xs;
+    }
+
+    .chat-message {
+        @apply block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6;
+    }
+
+    .chat-send {
+        @apply block items-center rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2;
+    }
+</style>
