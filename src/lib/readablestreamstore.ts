@@ -15,11 +15,13 @@ export function readablestreamStore() {
             const reader = result.body.pipeThrough(new TextDecoderStream()).getReader();
 
             let finaltext = "";
-
             while (true) {
                 const { value: token, done } = await reader.read();
 
-                if (token != undefined) update((val) => ((finaltext = val.text + token), { loading: true, text: finaltext }));
+                if (token != undefined) update((val) => {
+                   finaltext = val.text + token;
+                   return ({ loading: true, text: finaltext });
+                });
                 if (done) break;
             }
 
@@ -34,3 +36,4 @@ export function readablestreamStore() {
 
     return { subscribe, request };
 }
+

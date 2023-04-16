@@ -19,14 +19,14 @@ export const POST = async ({ request }) => {
     // Create a new readable stream of the chat response
     const readableStream = new ReadableStream({
         async start(controller) {
-            const chat = new ChatOpenAI({
-                openAIApiKey: OPENAI_KEY,
-                modelName: "gpt-4",
-                streaming: true,
-                callbackManager: CallbackManager.fromHandlers({
-                    handleLLMNewToken: async (token: string) => controller.enqueue(token),
-                }),
-            });
+          const chat = new ChatOpenAI({
+              openAIApiKey: OPENAI_KEY,
+              modelName: "gpt-4",
+              streaming: true,
+              callbackManager: CallbackManager.fromHandlers({
+                  handleLLMNewToken: async (token: string) => controller.enqueue(token),
+              }),
+          });
 
             await chat.call([
                 new SystemChatMessage("You are a helpful assistant. Limit prose. Answer with markdown where appropiate."),
@@ -36,7 +36,7 @@ export const POST = async ({ request }) => {
                 )
             ]);
 
-            controller.close();
+          controller.close();
         },
     });
 
@@ -45,3 +45,6 @@ export const POST = async ({ request }) => {
         headers: { 'Content-Type': 'text/plain' },
     });
 }
+
+
+
