@@ -20,12 +20,11 @@
         chat_history = [...chat_history, { role: "user", content: message }];
 
         try {
-            const chats = [{ role: "assistant", content: "Hello! How can I help you today?" }, ...chat_history];
             const answer = response.request(
                 new Request("/api/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ chats }),
+                    body: JSON.stringify({ chats: chat_history }),
                 })
             );
 

@@ -30,6 +30,7 @@ export const POST = async ({ request }) => {
 
             await chat.call([
                 new SystemChatMessage("You are a helpful assistant. Limit prose. Answer with markdown where appropiate."),
+                new AIChatMessage("Hello! How can I help you today?"),
                 ...body.chats.map(chat => chat.role == "user"
                     ? new HumanChatMessage(chat.content)
                     : new AIChatMessage(chat.content)
